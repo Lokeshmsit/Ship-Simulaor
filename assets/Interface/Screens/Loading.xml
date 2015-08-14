@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- start screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    
+    <controlDefinition name = "progressbar" controller = "mygame.SimulationScreensConstroller">
+        <!--<image filename="Interface/Screens/Images/border.png" childLayout="absolute" 
+               imageMode="resize:15,2,15,15,15,2,15,2,15,2,15,15">   -->
+            <image id="progressbar"  filename="Interface/Screens/Images/circle-green.png" width="32px" height="100%"
+                   imageMode="resize:24,4,24,24,24,4,24,4,24,4,24,24" />
+       <!-- </image> $CALL.getLoadingScreenSpacePanelHeight()  imageMode="resize:15,2,15,15,15,2,15,2,15,2,15,15"-->
+    </controlDefinition>
+    
+    
+ <screen id="start" controller="mygame.SimulationScreensConstroller">
+     
+    <layer id="background" height="100.0%" width="100.0%" backgroundImage="Interface/Screens/Images/loadin_1980x1080.jpg" childLayout="center">
+      <!--<image filename="Interface/Screens/Images/loadin_1980x1080.jpg"></image>  -->
+    </layer>
+    
+    <layer id="foreground" childLayout="vertical">
+        
+      <panel id="panel_top" height="25%" width="75%" align="left" childLayout="horizontal">
+        <text text="Ship Simulator" font="Interface/Fonts/Verdana.fnt" width="100%" height="100%" />
+      </panel>
+      
+        <panel height="70%">
+          
+        </panel>
+     
+       <panel id = "loadingpanel" childLayout="vertical" valign="center" height="42px" width="98%">
+               <control name="progressbar"  valign="center" height="42px" />                                         
+       </panel>
+
+    </layer>
+    
+  </screen>
+
+</nifty>

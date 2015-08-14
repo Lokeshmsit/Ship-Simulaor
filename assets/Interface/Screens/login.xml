@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nifty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+    <useControls filename="nifty-default-controls.xml"/>
+    <useStyles filename="nifty-default-styles.xml"/>
+    <screen id="login" controller = "mygame.SimulationScreensConstroller">
+        <layer id="login_screen" backgroundImage="/Interface/Screens/Images/bg wo strip.png" childLayout="vertical">
+            <panel id="page_title" height="15%"  width="100%" childLayout="horizontal" align="center">
+                <control name="label" id="GLabel4" text="Sim Login" height="100%" width="30%" font="/Interface/Fonts/Verdana.fnt" />
+                <panel id="top_title_space" height="100%" width="40%"> 
+                </panel>
+                <panel childLayout="horizontal" height="100.0%" width="20.0%"> 
+                    <image id="india_logo" algin="center" height="100.0%" width="100.0%" filename="Interface/Screens/Images/images.png" />
+                </panel>
+            </panel>
+            
+            <panel height="20%">
+                
+                
+            </panel>
+            
+            
+            <panel id="login_panel" height="40.0%"  width="50%" align="center" childLayout="vertical" valign="center">
+                
+               <panel childLayout="horizontal" height="10.00%">             
+                  <control name="label"  id="GLabel2" text="User Name :" width="25%" />
+                  <control name="textfield" backgroundColor="#ffff00" id="GTextfield0" width="50%">
+  
+                  </control> 
+               </panel>
+               
+               <panel childLayout="horizontal" height="10.00%">
+                  <control name="label" id="GLabe22" text="password : " width="25%"/>
+                  <control name="textfield" passwordChar="*" id="GTextfield2" width="50%" />
+               </panel> 
+                
+               <panel childLayout="horizontal" align="center" height="20.00%">
+                    <panel width="30%"></panel>
+                    
+                    <panel childLayout="horizontal" valign="center" align="center">
+                      <control name="button" label="Login"  visibleToMouse="true" height="60%" font="/Interface/Fonts/Verdana.fnt" id="login_btn" valign="center" >
+                          <interact  onClick="setCurrentScreen(options)"></interact>
+                      </control>
+                      <panel width="5%" valign="center"></panel>
+                      <control name="button" id="new_user" label="New User" height="60%" valign="center" />
+                    </panel>   
+                    
+               </panel>
+                    
+            </panel>
+            
+        </layer>
+    </screen>
+</nifty>

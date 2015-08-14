@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nifty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+    <useControls filename="nifty-default-controls.xml"/>
+    <useStyles filename="nifty-default-styles.xml"/>
+    <screen id="options" controller = "mygame.SimulationScreensConstroller">
+        <layer id="GLayer6" height="100.0%" width="100.0%" backgroundImage="Interface/Screens/Images/loadin_1980x1080.jpg" childLayout="center">
+            <panel id="GPanel1" height="40.0%"  width="90.0%" childLayout="horizontal" y="223px" x="204px">
+                
+                <panel id="GPanel2" height="50.0%" backgroundColor="#ffffff00" width="33.0%" valign="center" childLayout="vertical">
+
+                    <image filename="Interface/Screens/Images/NEW_orange_oval_off.png" imageMode="normal" align="left" valign="center" visibleToMouse="true">                       
+                          <interact onClick="setCurrentScreen(exercises_options)"></interact>  
+                          <effect>
+
+                          <onHover name="changeImage" active="Interface/Screens/Images/NEW_orange_oval_on.png" inactive="Interface/Screens/Images/NEW_orange_oval_off.png" />
+
+                        </effect> 
+                        
+                     </image>  
+                </panel>
+                
+                <panel id="GPanel2Cloned(47)" height="100.0%" backgroundColor="#ffffff00" width="34.0%" valign="center" childLayout="vertical">
+                            <!--          <image id="GImage30Cloned(48)" height="80.0%" imageMode="normal" filename="Interface/Screens/Images/orange_oval_off.png" y="44" x="109" visibleToMouse="true">  -->
+                    <image filename="Interface/Screens/Images/USER_GUIDE_orange_oval_off.png" imageMode="normal" align="left" valign="center" visibleToMouse="true">                       
+                        <effect>
+
+                          <onHover name="changeImage" active="Interface/Screens/Images/USER_GUIDE_orange_oval_on.png" inactive="Interface/Screens/Images/USER_GUIDE_orange_oval_off.png" />
+
+                        </effect>   
+                     </image>
+                </panel>
+                
+             <!--   
+                <panel id="GPanel2Cloned(47)Cloned(49)" height="100.0%" backgroundColor="#ffffff00" width="33.0%" childLayout="center" y="-1px" x="-1px">
+                    <effect><onHover name="show" targetElement="GImage30Cloned(48)Cloned(51)">
+                    <image id="GImage30Cloned(48)Cloned(50)"  height="80.0%" width="81.0%" filename="Interface/Screens/Images/orange_oval_off.png" y="44" x="109"/>
+                    <image id="GImage30Cloned(48)Cloned(51)"  height="80.0%" width="81.0%" filename="Interface/Screens/Images/orange_oval_off.png" y="44" x="109"/>
+                </effect> 
+                </panel>
+                       -->
+                       
+            <panel height="50%" width="33.0%" childLayout="vertical" align="center" valign="center" backgroundColor="#ffffff00">
+        
+                <image filename="Interface/Screens/Images/settings_orange_oval_off.png" imageMode="normal" align="left" valign="center" visibleToMouse="true">
+                <effect>
+
+                   <onHover name="changeImage" active="Interface/Screens/Images/settings_orange_oval_on.png" inactive="Interface/Screens/Images/settings_orange_oval_off.png" />
+
+                </effect>
+                   
+                 </image>
+        
+            </panel>
+                       
+            </panel>
+            
+        </layer>
+    </screen>
+</nifty>
