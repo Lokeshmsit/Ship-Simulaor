@@ -4,6 +4,7 @@
  */
 package mygame;
 
+import mygame.ai.EnvironmentShips;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
