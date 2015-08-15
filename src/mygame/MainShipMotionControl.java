@@ -66,7 +66,6 @@ public class MainShipMotionControl extends AbstractControl {
     
     //=======================================
     
-    
     private float bhp;
     private float C;
     private float DISPLACEMENT=3000.0f;
@@ -168,15 +167,13 @@ public class MainShipMotionControl extends AbstractControl {
          
          case DISSEL: //========================= DISSEL STATE==================
          { 
-           
-             
+               
          }
          break;
              
          case ENGINE:  //================== IGNITION STATE===================
          {
-            //System.out.println("state : "+state );
-            
+              
          }
          break;
              
@@ -188,16 +185,12 @@ public class MainShipMotionControl extends AbstractControl {
          break;
              
          case MOTOR:  //======================= MOTOR STATE ====================
-         {  
-               
+         { 
               Quaternion rotation=ship.getLocalRotation();
               Vector3f front=new Vector3f(getSpeedFactor(tpf),0,0);
               Vector3f Heading=rotation.mult(front);
               ship.move(Heading);           
-                  
-              //System.out.println("speedfactor before :"+speedFactor);
-                  
-               //GearUpText.setText("gear UP");              
+                    
          }
         break;
              
@@ -286,6 +279,7 @@ public class MainShipMotionControl extends AbstractControl {
             
      }
      
+    
     private AnalogListener moveListener=new AnalogListener()
     {
        public void onAnalog(String name, float value, float tpf) throws UnsupportedOperationException{
@@ -333,19 +327,21 @@ public class MainShipMotionControl extends AbstractControl {
         }
      };
     
-    
+  /**
+   * 
+   * @param tpf, function computes speed as per throttel and return move factor in forward/backward diraction.
+   * @return 
+   */   
   public float getSpeedFactor(float tpf)
   {       
      bhp=40*(throttle<0?throttle*-1.0f:throttle)+1;
     
-     //System.out.println("tpf : "+tpf);
-    
+   
      speed=C*FastMath.sqrt(bhp/DISPLACEMENT);
   
-     System.out.println("speed(mph)  "+speed+" speed(m/s): "+speed*0.44704f);
+     //System.out.println("speed(mph)  "+speed+" speed(m/s): "+speed*0.44704f);
      
-     // System.out.println(getSpeedFactor(tpf));
-     
+  
      speedFactor=speed*tpf*0.44704f;
      
      
@@ -354,11 +350,19 @@ public class MainShipMotionControl extends AbstractControl {
      return throttle<0?speedFactor*-1:speedFactor;
     
   }
-      
+    
+   /**
+    * 
+    * @return speed int m/s
+    */
    public float getSpeed() {
         return speedFactor;
     }
 
+   /**
+    * set current speed in m/s
+    * @return void
+    */
     public void setSpeed(float speedFactor) {
         
         this.speedFactor = speedFactor;
