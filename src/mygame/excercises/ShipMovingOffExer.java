@@ -28,7 +28,8 @@ public class ShipMovingOffExer extends AbstractAppState {
   
     BitmapText DieselText;
     BitmapText EngineText;
-    BitmapText TimerText;
+    BitmapText heatEngineText;
+    BitmapText heatEngineTimeText;
     BitmapText IgnitionText;
     BitmapText MotorText;
     BitmapFont myFont;
@@ -46,42 +47,14 @@ public class ShipMovingOffExer extends AbstractAppState {
      private AudioNode motorsound;
      private Spatial ship;
      
-     private float speedFactor=0.2F;
-     
-     private boolean KEY_M_pressed=false;
-     private boolean KEY_D_pressed=false;
-     private boolean KEY_E_pressed=false;
-     private boolean KEY_I_pressed=false;
-     
      private MainShipMotionControl ship_motion;
-             
-     boolean attached=false;
-
-    public float getSpeedFactor() {
-        return speedFactor;
-        
-    }
-
-    public void setSpeedFactor(float speedFactor) {
-        this.speedFactor = speedFactor;
-    }
-
-    
-    // private enum excerciseState {DIESEL,ENGINE,IGNITIION,MOTOR};
-    // private excerciseState state;
-     private Timer MyTimer;
-    
-     public ShipMovingOffExer(AssetManager mngr,InputManager io_manager,Node root_node,Node gui_node,Timer _Timer,Spatial sp)
+       
+   
+     public ShipMovingOffExer(AssetManager mngr,InputManager io_manager,Node root_node,Node gui_node,Spatial sp)
      {  
      
-        System.out.println("ship moving Excercise class!!");
+        System.out.println("ship moving Excercise class..constructor!!");
        
-        //state=excerciseState.DIESEL; 
-        
-        
-        this.MyTimer=_Timer; 
-        
-        
         System.out.println("current State is "+MainShipMotionControl.state);
         
         this.assetManager=mngr; 
@@ -104,8 +77,7 @@ public class ShipMovingOffExer extends AbstractAppState {
         DieselText.setColor(ColorRGBA.Green);   
         DieselText.setQueueBucket(RenderQueue.Bucket.Gui);
         
-        guiNode.attachChild(DieselText);
-        
+       
         
         //==================== EngineText ========================================
         
@@ -114,16 +86,24 @@ public class ShipMovingOffExer extends AbstractAppState {
         EngineText.setColor(ColorRGBA.Green);                                       
         EngineText.setQueueBucket(RenderQueue.Bucket.Gui);
         EngineText.setLocalTranslation(70,700,1);  
-        guiNode.attachChild(EngineText);
+       
     
-       //=================== TimerText =========================================
+       //=================== heatEngineText =========================================
         
-        TimerText = new BitmapText(myFont, true); 
-        TimerText.setSize(30);
-        TimerText.setColor(ColorRGBA.Red);                                       
-        TimerText.setQueueBucket(RenderQueue.Bucket.Gui);
-        TimerText.setLocalTranslation(50,500,1);  
-        guiNode.attachChild(TimerText);
+        heatEngineText = new BitmapText(myFont, true); 
+        heatEngineText.setSize(30);
+        heatEngineText.setColor(ColorRGBA.Green);                                       
+        heatEngineText.setQueueBucket(RenderQueue.Bucket.Gui);
+        heatEngineText.setLocalTranslation(50,500,1);  
+      
+        
+        //================== heatEngineTimeText ========================================= 
+        heatEngineTimeText= new BitmapText(myFont, true); 
+        heatEngineTimeText.setSize(30);
+        heatEngineTimeText.setColor(ColorRGBA.Red);                                       
+        heatEngineTimeText.setQueueBucket(RenderQueue.Bucket.Gui);
+        heatEngineTimeText.setLocalTranslation(20,100,1);  
+        
         
         //=================IgnitionText========================================
         
@@ -132,7 +112,7 @@ public class ShipMovingOffExer extends AbstractAppState {
         IgnitionText.setColor(ColorRGBA.Green);                                       
         IgnitionText.setQueueBucket(RenderQueue.Bucket.Gui);
         IgnitionText.setLocalTranslation(70,400,1);  
-        guiNode.attachChild(IgnitionText);
+       // guiNode.attachChild(IgnitionText);
         
         //===============MotorText==============================================
         
@@ -141,13 +121,10 @@ public class ShipMovingOffExer extends AbstractAppState {
         MotorText.setColor(ColorRGBA.Green);                                       
         MotorText.setQueueBucket(RenderQueue.Bucket.Gui);
         MotorText.setLocalTranslation(70,400,1);  
-        guiNode.attachChild(MotorText);
+        //guiNode.attachChild(MotorText);
        
-        System.out.println("about to init keys ");
+        System.out.println("ShipMovingOffExer exercise constructor end... ");
         
-        //initKeys();
-        
-        System.out.println("initkeys done ");
       }
    
      
@@ -161,73 +138,49 @@ public class ShipMovingOffExer extends AbstractAppState {
          case ZERO_OFF:
          {
              
-              DieselText.setText("Turn ON Dissel SWITCH!!");
-              DieselText.setLocalTranslation(20,700,1); 
+              DieselText.setText("Turn ON Dissel SWITCHES..!!");
+              DieselText.setLocalTranslation(20,700,1);
+              guiNode.attachChild(DieselText);
          
          }
                 
          case DISSEL: //========================= DISSEL STATE ==================
          { 
-            //System.out.println("state : "+MainShipMotionControl.state );
           
            if(ship_motion.isDisselSwitches())
            {  
                 guiNode.detachChild(DieselText);
-                rootNode.detachChild(guiNode);
-                MainShipMotionControl.state=MainShipMotionControl.ShipState.ENGINE;
+                EngineText.setText("Insert keys..Turn ON Engine..!!");
+                EngineText.setLocalTranslation(20,700,1);
+                guiNode.attachChild(EngineText);
            }
-           else
-           {
-               System.out.println(" KEY D NOT PRESSSED");
-               DieselText.setText("PRESS DISSEL SWITCH");
-               DieselText.setLocalTranslation(20,700,1); 
-               
-              if(!attached) 
-              {
-                  guiNode.attachChild(DieselText);
-                  attached=true;
-              }
-           }
+           
          }
          break;
              
          case ENGINE:  //================== IGNITION STATE===================
          {
-            System.out.println("state : "+MainShipMotionControl.state );
+             guiNode.detachChild(EngineText);
+             heatEngineText.setText("Turn keys clockwise to Engine combustion mode.. and hold for 5 seconds..!!");
+             heatEngineText.setLocalTranslation(20,700,1);
+             guiNode.attachChild(heatEngineText); 
+             
+             heatEngineTimeText.setText((int)ship_motion.getIgnitionHeatTime()+"");
+             heatEngineTimeText.setLocalTranslation(20,100,1);
+             guiNode.attachChild(heatEngineTimeText); 
             
-            if(KEY_E_pressed)
-             {
-               guiNode.detachChild(EngineText);
-               rootNode.detachChild(guiNode);
-                MainShipMotionControl.state=MainShipMotionControl.ShipState.IGNITIION;
-             }
-             else
-             { 
-               EngineText.setText("TURN ON ENGINE FOR 10 sec");
-               guiNode.attachChild(EngineText);
-               EngineText.setLocalTranslation(20,700,1); 
-               rootNode.attachChild(guiNode);
-             }
           }
          break;
-           case IGNITIION:  //================== IGNITION STATE===================
+          
+          case IGNITIION:  //================== IGNITION STATE===================
          {
-               
+            
+              guiNode.detachChild(heatEngineText);  
+              guiNode.detachChild(heatEngineTimeText);  
+              
+             
             //System.out.println("state : "+MainShipMotionControl.state );
             
-            if(KEY_I_pressed)
-             {
-                 guiNode.detachChild(IgnitionText);
-                 rootNode.detachChild(guiNode);
-                 //MainShipMotionControl.state=MainShipMotionControl.ShipState.MOTOR;
-             }
-             else
-             { 
-               IgnitionText.setText("TURN ON IGNITION");
-               guiNode.attachChild(IgnitionText);
-               IgnitionText.setLocalTranslation(20,700,1); 
-               rootNode.attachChild(guiNode);
-             }
           }
          break;
   

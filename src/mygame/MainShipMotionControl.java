@@ -56,7 +56,7 @@ public class MainShipMotionControl extends AbstractControl {
     
     
     //============ Engine parameters ================
-    private float heat;
+    private float  heat;
     
    
     
@@ -85,15 +85,28 @@ public class MainShipMotionControl extends AbstractControl {
     public void setDisselSwitches(boolean disselSwitches) {
         this.disselSwitches = disselSwitches;
     }
+
+    /**
+     * @return the heat
+     */
+    public float getIgnitionHeatTime() {
+        return heat;
+    }
+
+    /**
+     * @param heat the heat to set
+     */
+    public void setIgnitionHeatTime(float heat) {
+        this.heat = heat;
+    }
     
     //====== boat states
-    public static enum ShipState {ZERO_OFF,DISSEL,ENGINE,IGNITIION,MOTOR};
+    public static enum ShipState {ZERO_OFF,DISSEL,ENGINE,HEAT,IGNITIION,MOTOR};
     
     //====== current state
     public static ShipState state;
     
-    
-    
+   
     public MainShipMotionControl(AssetManager mngr,InputManager io_manager,Spatial ship_node,Node root_node,Node gui_node) 
     {       
         System.out.println("motioncontrol constructor");
@@ -116,7 +129,6 @@ public class MainShipMotionControl extends AbstractControl {
         rootNode.attachChild(guiNode);
          
         
-       
         initMainShip();
         
         throttle_handle=(Picture)this.resourceManager.getResource("Throttle_handle");
@@ -147,7 +159,7 @@ public class MainShipMotionControl extends AbstractControl {
         bhp=0.0f;
         C=240.0f;
         
-        heat=0;
+        setIgnitionHeatTime(0.0f);
     }
     
     protected void controlUpdate(float tpf) {
@@ -170,15 +182,14 @@ public class MainShipMotionControl extends AbstractControl {
              
          case IGNITIION:  //================== IGNITION STATE===================
          {
-            
-             
+            initKeys_motion();
+            MainShipMotionControl.state=MainShipMotionControl.ShipState.MOTOR;  
          }
          break;
              
          case MOTOR:  //======================= MOTOR STATE ====================
          {  
-             
-              //getSpeedFactor(tpf);    
+               
               Quaternion rotation=ship.getLocalRotation();
               Vector3f front=new Vector3f(getSpeedFactor(tpf),0,0);
               Vector3f Heading=rotation.mult(front);
@@ -215,66 +226,50 @@ public class MainShipMotionControl extends AbstractControl {
          
      public void onAnalog(String name, float value, float tpf) throws UnsupportedOperationException{
     
-           
         if(name.equals("DISSEL_ON"))
        { 
            if(state==ShipState.ZERO_OFF)  
           {  
                setDisselSwitches(true);
+               
                state=ShipState.DISSEL;
+               
           }
            
-        } else if(name.equals("ENGINE"))
+       } else if(name.equals("ENGINE"))
          { 
               
             if(state==ShipState.DISSEL)   
             {    
-                //guiNode.detachChild(EngineText);
-                //rootNode.detachChild(guiNode);
-                
-               // float sec;//=MyTimer.getTimeInSeconds();
-            
-                //if(sec>10)
-                // {
-                    MainShipMotionControl.state=MainShipMotionControl.ShipState.IGNITIION;   
-                   
-                // }else
-                 //    {    
-                        // System.out.println("timer is :"+sec);
-                        
-                         
-                   //    }
-              }
-                
-                
-        
+               state=ShipState.ENGINE;
+            }
+                  
          }
         
-             
-            
         else if(name.equals("IGNITIION"))
        {
-         /*
-          if(MainShipMotionControl.state==MainShipMotionControl.ShipState.IGNITIION) 
+         
+          if(state==ShipState.ENGINE) 
           {  
               
-            //motorsound=new AudioNode(assetManager, "Sounds/motorstart.wav", true);  
-            //motorsound.setLooping(true);
-            //motorsound.play();
-            
-                   
-            guiNode.detachChild(IgnitionText);
-            rootNode.detachChild(guiNode);
+             heat+=tpf;
+                
+             if(heat>=6) 
+            {
+                System.out.println("enough heat");
+                System.out.println("ship is in IGINITION State Now.");
+                state=MainShipMotionControl.ShipState.IGNITIION;
+                
+            }else
+             {
+                
+             }
              
-             
-            KEY_E_pressed=true;
-            MainShipMotionControl.state=MainShipMotionControl.ShipState.MOTOR;  
-            ship_motion.initKeys_motion();
-            
           }
-          */
-       }  
-     }
+          
+       } 
+        
+      }
         
      
      };
@@ -336,7 +331,7 @@ public class MainShipMotionControl extends AbstractControl {
            }
        
         }
-    };
+     };
     
     
   public float getSpeedFactor(float tpf)
@@ -379,7 +374,6 @@ public class MainShipMotionControl extends AbstractControl {
         this.rotateFactor = rotateFactor;
     }
 
-  
     protected void controlRender(RenderManager rm, ViewPort vp) {
     
     }

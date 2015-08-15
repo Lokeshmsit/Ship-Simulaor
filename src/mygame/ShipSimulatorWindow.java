@@ -51,7 +51,7 @@ public class ShipSimulatorWindow extends SimpleApplication{
         int height = gd.getDisplayMode().getHeight();
         
         gameSettings.setResolution(width,height);
-        //gameSettings.setFullscreen(true);
+        gameSettings.setFullscreen(true);
         app.setShowSettings(false);
         app.setSettings(gameSettings);
         app.start();
@@ -126,7 +126,7 @@ public class ShipSimulatorWindow extends SimpleApplication{
        if(exercise_name.equals("getting_started"))
        {
          
-          selectedExercise=new ShipMovingOffExer(assetManager,inputManager,rootNode,guiNode,timer,this.modelResourceManager.getResource("Main_ship"));
+          selectedExercise=new ShipMovingOffExer(assetManager,inputManager,rootNode,guiNode,this.modelResourceManager.getResource("Main_ship"));
        
           stateManager.attach(selectedExercise);
           
