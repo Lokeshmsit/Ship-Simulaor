@@ -21,24 +21,21 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.scene.Spatial;
 import com.jme3.system.Timer;
 import com.jme3.water.WaterFilter;
+import mygame.GameGlobalSharePool;
 import mygame.MainShipMotionControl;
+import mygame.ModelResourceManager;
 
 
 public class ShipMovingOffExer extends AbstractAppState {
   
-    BitmapText DieselText;
-    BitmapText EngineText;
-    BitmapText heatEngineText;
-    BitmapText heatEngineTimeText;
-    BitmapText IgnitionText;
-    BitmapText MotorText;
-    BitmapFont myFont;
- 
- /*  BitmapText topLeft;
-     BitmapText topCenter;
-     BitmapText topRight;
-     BitmapText topTimer;*/
-     
+     BitmapText DieselText;
+     BitmapText EngineText;
+     BitmapText heatEngineText;
+     BitmapText heatEngineTimeText;
+     BitmapText IgnitionText;
+     BitmapText shipstartedText;
+     private float  msgdelaytimer;
+     BitmapFont myFont;
      
      private AssetManager assetManager;
      //private HUDMessageManager hud_mngr;
@@ -46,26 +43,22 @@ public class ShipMovingOffExer extends AbstractAppState {
      private InputManager inputManager;
      private AudioNode motorsound;
      private Spatial ship;
-     
      private MainShipMotionControl ship_motion;
-       
-   
-     public ShipMovingOffExer(AssetManager mngr,InputManager io_manager,Node root_node,Node gui_node,Spatial sp)
-     {  
      
+     public ShipMovingOffExer() //AssetManager mngr,InputManager io_manager,Node root_node,Node gui_node,Spatial sp)
+     {  
         System.out.println("ship moving Excercise class..constructor!!");
        
         System.out.println("current State is "+MainShipMotionControl.state);
         
-        this.assetManager=mngr; 
-        this.inputManager=io_manager;
-        this.guiNode=gui_node;
-        this.rootNode=root_node;
-        this.ship=sp;
+        this.assetManager=GameGlobalSharePool.simpleApplication.getAssetManager(); 
+        this.inputManager=GameGlobalSharePool.simpleApplication.getInputManager();
+        this.guiNode=GameGlobalSharePool.simpleApplication.getGuiNode();
+        this.rootNode=GameGlobalSharePool.simpleApplication.getRootNode();
         
-        this.ship_motion=new MainShipMotionControl(assetManager,inputManager,this.ship,rootNode,guiNode);
+        this.ship_motion=new MainShipMotionControl((Node)ModelResourceManager.getInstance().getResource("Main_ship"));
         
-        sp.addControl(ship_motion);
+        ModelResourceManager.getInstance().getResource("Main_ship").addControl(this.ship_motion);
         
         this.rootNode.attachChild(this.guiNode);
         myFont = assetManager.loadFont("Interface/Fonts/Verdana.fnt");
@@ -76,7 +69,7 @@ public class ShipMovingOffExer extends AbstractAppState {
         DieselText.setSize(30);
         DieselText.setColor(ColorRGBA.Green);   
         DieselText.setQueueBucket(RenderQueue.Bucket.Gui);
-        
+        DieselText.setLocalTranslation(GameGlobalSharePool.ScreenHeight*2/100,GameGlobalSharePool.ScreenHeight*90/100,1);
        
         
         //==================== EngineText ========================================
@@ -84,8 +77,8 @@ public class ShipMovingOffExer extends AbstractAppState {
         EngineText = new BitmapText(myFont, true); 
         EngineText.setSize(30);
         EngineText.setColor(ColorRGBA.Green);                                       
-        EngineText.setQueueBucket(RenderQueue.Bucket.Gui);
-        EngineText.setLocalTranslation(70,700,1);  
+        EngineText.setQueueBucket(RenderQueue.Bucket.Gui);     
+        EngineText.setLocalTranslation(GameGlobalSharePool.ScreenHeight*2/100,GameGlobalSharePool.ScreenHeight*90/100,1);
        
     
        //=================== heatEngineText =========================================
@@ -94,7 +87,7 @@ public class ShipMovingOffExer extends AbstractAppState {
         heatEngineText.setSize(30);
         heatEngineText.setColor(ColorRGBA.Green);                                       
         heatEngineText.setQueueBucket(RenderQueue.Bucket.Gui);
-        heatEngineText.setLocalTranslation(50,500,1);  
+        heatEngineText.setLocalTranslation(GameGlobalSharePool.ScreenHeight*2/100,GameGlobalSharePool.ScreenHeight*90/100,1);  
       
         
         //================== heatEngineTimeText ========================================= 
@@ -102,7 +95,7 @@ public class ShipMovingOffExer extends AbstractAppState {
         heatEngineTimeText.setSize(30);
         heatEngineTimeText.setColor(ColorRGBA.Red);                                       
         heatEngineTimeText.setQueueBucket(RenderQueue.Bucket.Gui);
-        heatEngineTimeText.setLocalTranslation(20,100,1);  
+        heatEngineTimeText.setLocalTranslation(GameGlobalSharePool.ScreenHeight*4/100,GameGlobalSharePool.ScreenHeight*10/100,1);  
         
         
         //=================IgnitionText========================================
@@ -111,18 +104,18 @@ public class ShipMovingOffExer extends AbstractAppState {
         IgnitionText.setSize(30);
         IgnitionText.setColor(ColorRGBA.Green);                                       
         IgnitionText.setQueueBucket(RenderQueue.Bucket.Gui);
-        IgnitionText.setLocalTranslation(70,400,1);  
-       // guiNode.attachChild(IgnitionText);
+        IgnitionText.setLocalTranslation(GameGlobalSharePool.ScreenHeight*2/100,GameGlobalSharePool.ScreenHeight*90/100,1);  
+     
         
         //===============MotorText==============================================
         
-        MotorText = new BitmapText(myFont, true); 
-        MotorText.setSize(30);
-        MotorText.setColor(ColorRGBA.Green);                                       
-        MotorText.setQueueBucket(RenderQueue.Bucket.Gui);
-        MotorText.setLocalTranslation(70,400,1);  
-        //guiNode.attachChild(MotorText);
-       
+        shipstartedText = new BitmapText(myFont, true); 
+        shipstartedText.setSize(30);
+        shipstartedText.setColor(ColorRGBA.Green);                                       
+        shipstartedText.setQueueBucket(RenderQueue.Bucket.Gui);
+        shipstartedText.setLocalTranslation(70,400,1);  
+        shipstartedText.setLocalTranslation(GameGlobalSharePool.ScreenHeight*2/100,GameGlobalSharePool.ScreenHeight*90/100,1); 
+        
         System.out.println("ShipMovingOffExer exercise constructor end... ");
         
       }
@@ -139,7 +132,7 @@ public class ShipMovingOffExer extends AbstractAppState {
          {
              
               DieselText.setText("Turn ON Dissel SWITCHES..!!");
-              DieselText.setLocalTranslation(20,700,1);
+              
               guiNode.attachChild(DieselText);
          
          }
@@ -151,7 +144,6 @@ public class ShipMovingOffExer extends AbstractAppState {
            {  
                 guiNode.detachChild(DieselText);
                 EngineText.setText("Insert keys..Turn ON Engine..!!");
-                EngineText.setLocalTranslation(20,700,1);
                 guiNode.attachChild(EngineText);
            }
            
@@ -162,11 +154,10 @@ public class ShipMovingOffExer extends AbstractAppState {
          {
              guiNode.detachChild(EngineText);
              heatEngineText.setText("Turn keys clockwise to Engine combustion mode.. and hold for 5 seconds..!!");
-             heatEngineText.setLocalTranslation(20,700,1);
+             
              guiNode.attachChild(heatEngineText); 
              
              heatEngineTimeText.setText((int)ship_motion.getIgnitionHeatTime()+"");
-             heatEngineTimeText.setLocalTranslation(20,100,1);
              guiNode.attachChild(heatEngineTimeText); 
             
           }
@@ -174,14 +165,38 @@ public class ShipMovingOffExer extends AbstractAppState {
           
           case IGNITIION:  //================== IGNITION STATE===================
          {
-            
               guiNode.detachChild(heatEngineText);  
               guiNode.detachChild(heatEngineTimeText);  
               
+              shipstartedText.setText("Ship started");
+              guiNode.attachChild(shipstartedText);
+              
+              setMsgDelaytimer(0.0f);
+              
+          }
+              
+          case MOTOR:   //================== MOTOR STATE===================
+         {
+             setMsgDelaytimer(getMsgDelaytimer()+tpf); 
+              
+             if(getMsgDelaytimer()<4) 
+             {
+                guiNode.detachChild(heatEngineText);  
+                guiNode.detachChild(heatEngineTimeText);   
+                 
+                shipstartedText.setText("Ship started");
+                guiNode.attachChild(shipstartedText);
              
-            //System.out.println("state : "+MainShipMotionControl.state );
+             }else
+              {
+                guiNode.detachChild(shipstartedText);
+                 
+              }
+          
             
           }
+         
+         
          break;
   
         default:
@@ -191,6 +206,20 @@ public class ShipMovingOffExer extends AbstractAppState {
         break;
        }
      }
+
+    /**
+     * @return the msgdelaytimer
+     */
+    public float getMsgDelaytimer() {
+        return msgdelaytimer;
+    }
+
+    /**
+     * @param msgdelaytimer the msgdelaytimer to set
+     */
+    public void setMsgDelaytimer(float msgdelaytimer) {
+        this.msgdelaytimer = msgdelaytimer;
+    }
 
  
 }

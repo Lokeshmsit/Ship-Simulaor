@@ -69,7 +69,7 @@ public class SceneBuilder {
         
         BoundingBox b=(BoundingBox)ship.getWorldBound();
         
-        System.out.println("Breadth : "+b.getXExtent()+" height : "+b.getYExtent());
+        System.out.println("Breadth : "+b.getXExtent()+" height : "+b.getZExtent());
         
   }
   
@@ -140,13 +140,12 @@ public class SceneBuilder {
           this.resourceManager.addResource("Throttle_handle", pic2);
           
     }
-
+    
      public void createSpeedoMeter()
     {
-        
       Picture pic = new Picture("knots meter");
       //pic.setImage(this.simwindow.getAssetManager(), "Textures/new_knots_text_meter.png", true);
-      pic.setWidth(settings.getWidth()/6);
+      pic.setWidth(settings.getWidth()/7);
       pic.setHeight(settings.getHeight()/6);
       pic.setPosition(settings.getWidth()*33/100, settings.getHeight()*1/100);
       
@@ -158,9 +157,9 @@ public class SceneBuilder {
       
       Picture pic_needle1 = new Picture("knots meter needle");
       //pic.setImage(this.simwindow.getAssetManager(), "Textures/new_knots_text_meter.png", true);
-      pic_needle1.setWidth(settings.getWidth()/70);
-      pic_needle1.setHeight(settings.getHeight()/18);
-      pic_needle1.setPosition(settings.getWidth()/3+settings.getWidth()/13, 24);
+      pic_needle1.setWidth(settings.getWidth()/80);
+      pic_needle1.setHeight(settings.getHeight()/16);
+      pic_needle1.setPosition(settings.getWidth()/3+settings.getWidth()/16, 28);
       
       Texture2D tex_needle=(Texture2D)this.simwindow.getAssetManager().loadTexture("Textures/white_needle.png");
       pic_needle1.setTexture(this.simwindow.getAssetManager(), tex_needle, true);
@@ -169,17 +168,16 @@ public class SceneBuilder {
       
       this.resourceManager.addResource("knots_needle", pic_needle1);
       
-      
       Picture pic2 = new Picture("rpm motor");
       //pic.setImage(this.simwindow.getAssetManager(), "Textures/new_knots_text_meter.png", true);
-      pic2.setWidth(settings.getWidth()/6);
+      pic2.setWidth(settings.getWidth()/7);
       pic2.setHeight(settings.getHeight()/6);
       pic2.setPosition(settings.getWidth()/2, 5);                     //settings.getWidth()/3+settings.getWidth()/6
       
       Texture2D tex2=(Texture2D)this.simwindow.getAssetManager().loadTexture("Textures/new_RPM_meter.png");
       pic2.setTexture(this.simwindow.getAssetManager(), tex2, true);
       
-       this.simwindow.getGuiNode().attachChild(pic2);
+      this.simwindow.getGuiNode().attachChild(pic2);
     
     }
     

@@ -47,15 +47,15 @@ public class ShipSimulatorWindow extends SimpleApplication{
         gameSettings.setRenderer(AppSettings.LWJGL_OPENGL_ANY);
         
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int width = gd.getDisplayMode().getWidth();
-        int height = gd.getDisplayMode().getHeight();
+        GameGlobalSharePool.ScreenWidth = gd.getDisplayMode().getWidth();
+        GameGlobalSharePool.ScreenHeight = gd.getDisplayMode().getHeight();
         
-        gameSettings.setResolution(width,height);
+        gameSettings.setResolution(GameGlobalSharePool.ScreenWidth,GameGlobalSharePool.ScreenHeight);
         gameSettings.setFullscreen(true);
         app.setShowSettings(false);
         app.setSettings(gameSettings);
         app.start();
-         
+        
     }
     
 
@@ -75,7 +75,6 @@ public class ShipSimulatorWindow extends SimpleApplication{
  
     private void initSound()
     {
-
 
       System.out.println("sound activated");
       
@@ -109,25 +108,21 @@ public class ShipSimulatorWindow extends SimpleApplication{
          screenController.initScreens();
          stateManager.attach(screenController);
          
-         
-         GameState.state=GameState.gameState.LOADING; 
+         GameGlobalSharePool.simpleApplication=this;
          
     }
      
     public void startSimulation(String exercise_name)
-    {    
-        
+    {   
        System.out.println("game started");
     
-     
        this.sceneBuilder.createDashBoard();
 
-       
        if(exercise_name.equals("getting_started"))
        {
          
-          selectedExercise=new ShipMovingOffExer(assetManager,inputManager,rootNode,guiNode,this.modelResourceManager.getResource("Main_ship"));
-       
+          selectedExercise=new ShipMovingOffExer();
+      
           stateManager.attach(selectedExercise);
           
           System.out.println("finshed getting started called!!");

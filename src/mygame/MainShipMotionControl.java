@@ -23,14 +23,14 @@ import com.jme3.ui.Picture;
 
 public class MainShipMotionControl extends AbstractControl {
     
-    
-    private ModelResourceManager resourceManager;
-    
     private Spatial ship;
+    
     private float speedFactor=0.12f;
     private float rotateFactor=0.15f;
-    private Object throtal;
+    
+    private Spatial throtal;
     private Spatial steer;
+    
     private AssetManager assetManager;
     private InputManager inputManager;
     private Node guiNode;
@@ -46,12 +46,17 @@ public class MainShipMotionControl extends AbstractControl {
     
     
     //==== Main ship control motion paprameters AND properties.
-    private final float ThrottleMax=5.0f;
-    private final float ThrottleMin=-1.0f;
+    private float ThrottleMax;
+    private float ThrottleMin;
+    private float ThrottleSteps;
+    private float throttleStep;
+    
+
     private float throttle;
     private float speed; 
     private boolean horn;
     private boolean disselSwitches;
+    private float needleRotateStep;
     //===============================================
     
     
@@ -59,8 +64,6 @@ public class MainShipMotionControl extends AbstractControl {
     private float  heat;
     
    
-    
-    
     //==== propellent motor parameters======
     private int motorRMP;
     
@@ -106,40 +109,19 @@ public class MainShipMotionControl extends AbstractControl {
     public static ShipState state;
     
    
-    public MainShipMotionControl(AssetManager mngr,InputManager io_manager,Spatial ship_node,Node root_node,Node gui_node) 
+    public MainShipMotionControl(Node mship)
     {       
         System.out.println("motioncontrol constructor");
         
-        this.resourceManager=ModelResourceManager.getInstance();
-        
-        this.ship=ship_node;
-        this.assetManager=mngr; 
-        this.inputManager=io_manager;
-        this.guiNode=gui_node;
-        this.rootNode=root_node;
-        
-        myFont = assetManager.loadFont("Interface/Fonts/Verdana.fnt");
-       
-        GearUpText = new BitmapText(myFont, true); 
-        GearUpText.setSize(30);
-        GearUpText.setColor(ColorRGBA.Green);   
-        GearUpText.setQueueBucket(RenderQueue.Bucket.Gui);
-        guiNode.attachChild(GearUpText);
-        rootNode.attachChild(guiNode);
-         
+        this.ship=mship;
+        this.assetManager=GameGlobalSharePool.simpleApplication.getAssetManager(); 
+        this.inputManager=GameGlobalSharePool.simpleApplication.getInputManager();
+        this.guiNode=GameGlobalSharePool.simpleApplication.getGuiNode();
+        this.rootNode=GameGlobalSharePool.simpleApplication.getRootNode();
         
         initMainShip();
         
-        throttle_handle=(Picture)this.resourceManager.getResource("Throttle_handle");
-        
-        needle_pivotKnots=new Node("KnotsNeedle_pivot");
-        knots_Needle=(Picture)this.resourceManager.getResource("knots_needle");
-        needle_pivotKnots.getLocalTranslation().set(knots_Needle.getLocalTranslation().getX()+5,knots_Needle.getLocalTranslation().getY()+50,knots_Needle.getLocalTranslation().getZ());
-        needle_pivotKnots.attachChild(knots_Needle);
-        knots_Needle.center();
-        knots_Needle.getLocalTranslation().set(knots_Needle.getLocalTranslation().getX(),knots_Needle.getLocalTranslation().getY()-18,knots_Needle.getLocalTranslation().getZ());
-        guiNode.attachChild(needle_pivotKnots);
-        
+        prepareDashboard();
         
         initKeys();
          
@@ -149,16 +131,57 @@ public class MainShipMotionControl extends AbstractControl {
         
     }
     
+    
+    /**
+     *  function configures and initialize speedometer parts.
+     */
+    private void prepareDashboard()
+    {
+    
+        throttle_handle=(Picture)ModelResourceManager.getInstance().getResource("Throttle_handle");
+        
+        needle_pivotKnots=new Node("KnotsNeedle_pivot");
+        knots_Needle=(Picture)ModelResourceManager.getInstance().getResource("knots_needle");
+        needle_pivotKnots.getLocalTranslation().set(knots_Needle.getLocalTranslation().getX()+5,knots_Needle.getLocalTranslation().getY()+50,knots_Needle.getLocalTranslation().getZ());
+        needle_pivotKnots.attachChild(knots_Needle);
+        knots_Needle.center();
+        knots_Needle.getLocalTranslation().set(knots_Needle.getLocalTranslation().getX(),knots_Needle.getLocalTranslation().getY()-14,knots_Needle.getLocalTranslation().getZ());
+        guiNode.attachChild(needle_pivotKnots);
+        
+        System.out.println("needle initial rotate : "+(-FastMath.PI/3.50f));
+        
+        // point to zero knots mark on knots speedometer
+        needle_pivotKnots.rotate(0.0f, 0.0f,-FastMath.PI/3.5f);
+    
+        
+        
+        ThrottleMax=5.0f;
+        ThrottleMin=-1.0f;
+        ThrottleSteps=600;
+        
+        throttleStep=(ThrottleMax+ThrottleMin*-1)/ThrottleSteps;
+       
+        needleRotateStep=3*(FastMath.PI/2.2f)/(ThrottleMax/throttleStep);
+    
+    }
+    
+    
+    
     /** 
      *  This function initialize boat with initial parameters and properties.
      */
     private void initMainShip()
     {
+                
         throttle=0;
+        
         bhp=0.0f;
         C=240.0f;
         
         setIgnitionHeatTime(0.0f);
+        
+        
+        
     }
     
     protected void controlUpdate(float tpf) {
@@ -206,7 +229,7 @@ public class MainShipMotionControl extends AbstractControl {
     }
     
     //================ initKeys() =============================================
-    public void  initKeys()
+    private void  initKeys()
     {
              inputManager.addMapping("DISSEL_ON",new KeyTrigger(KeyInput.KEY_D));
              inputManager.addMapping("ENGINE",new KeyTrigger(KeyInput.KEY_E));
@@ -238,13 +261,11 @@ public class MainShipMotionControl extends AbstractControl {
             }
                   
          }
-        
+       
         else if(name.equals("IGNITIION"))
        {
-         
           if(state==ShipState.ENGINE) 
           {  
-              
              heat+=tpf;
                 
              if(heat>=6) 
@@ -263,12 +284,10 @@ public class MainShipMotionControl extends AbstractControl {
        } 
         
       }
-        
      
      };
     
-
-     public void initKeys_motion()
+     private void initKeys_motion()
      {
             
             inputManager.addMapping("left",new KeyTrigger(KeyInput.KEY_LEFT));
@@ -300,11 +319,14 @@ public class MainShipMotionControl extends AbstractControl {
                   
                     if(throttle<=ThrottleMax) 
                    {  
-                       throttle=throttle+0.01f;
+                       throttle=throttle+throttleStep;
                      
                        throttle_handle.move(0,0.14f,0);
-                     
-                       needle_pivotKnots.rotate(0.0f,0.0f,-0.009866f);
+                       
+                       if(throttle>0)
+                         needle_pivotKnots.rotate(0.0f,0.0f,-needleRotateStep);           //-0.008066f);
+                       else
+                         needle_pivotKnots.rotate(0.0f,0.0f,needleRotateStep);  
                    }
                  
                }
@@ -314,11 +336,20 @@ public class MainShipMotionControl extends AbstractControl {
              if(throttle>=ThrottleMin) 
              {
                  
-                throttle=throttle-0.01f;
+                throttle=throttle-throttleStep;
              
                 throttle_handle.move(0,-0.14f,0);
                 
-                needle_pivotKnots.rotate(0.0f,0.0f,0.009866f);
+                if(throttle>0)
+                {  
+                    needle_pivotKnots.rotate(0.0f,0.0f,needleRotateStep);
+                }else
+                  {
+                    needle_pivotKnots.rotate(0.0f,0.0f,-needleRotateStep);
+                  
+                  }
+                
+                
                 
              }
              
